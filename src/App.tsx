@@ -3,10 +3,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
-import { Layers, Search, Lightbulb, Code, CheckCircle, Globe, Linkedin } from 'lucide-react';
-import { motion } from 'motion/react';
+import { Layers, Search, Lightbulb, Code, CheckCircle, Globe, Linkedin, ArrowUp } from 'lucide-react';
+import { motion, useScroll, useTransform, useSpring } from 'motion/react';
 
 function ScrollToTop() {
   const { pathname, hash } = useLocation();
@@ -24,6 +24,18 @@ function ScrollToTop() {
 }
 
 function Navbar() {
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      alert(`Search feature coming soon! You searched for: ${searchQuery}`);
+      setSearchQuery('');
+      setIsSearchOpen(false);
+    }
+  };
+
   return (
     <nav className="flex items-stretch border-b border-grid text-[9px] uppercase tracking-widest font-medium bg-[var(--color-bg-light)] sticky top-0 z-50">
       <div className="px-6 py-4 border-r border-grid flex items-center gap-2 w-48 shrink-0">
@@ -35,54 +47,33 @@ function Navbar() {
         <Link to="/#about" className="flex-1 px-4 py-4 border-r border-grid flex items-center justify-center hover:bg-ink/5 transition-colors">About</Link>
         <Link to="/#services" className="flex-1 px-4 py-4 border-r border-grid flex items-center justify-center hover:bg-ink/5 transition-colors">Services</Link>
         <Link to="/#resources" className="flex-1 px-4 py-4 border-r border-grid flex items-center justify-center hover:bg-ink/5 transition-colors">Resources</Link>
-        <Link to="/#contact" className="flex-1 px-4 py-4 flex items-center justify-center hover:bg-ink/5 transition-colors">Contact</Link>
+        <Link to="/#contact" className="flex-1 px-4 py-4 border-r border-grid flex items-center justify-center hover:bg-ink/5 transition-colors">Contact</Link>
+      </div>
+      <div className="flex items-stretch">
+        {isSearchOpen ? (
+          <form onSubmit={handleSearch} className="flex items-center px-4 w-48 sm:w-64">
+            <Search className="w-4 h-4 text-ink/50 mr-2 shrink-0" />
+            <input 
+              type="text" 
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="SEARCH..." 
+              className="bg-transparent border-none outline-none w-full text-ink placeholder:text-ink/30"
+              autoFocus
+              onBlur={() => !searchQuery && setIsSearchOpen(false)}
+            />
+          </form>
+        ) : (
+          <button 
+            onClick={() => setIsSearchOpen(true)}
+            className="px-6 py-4 flex items-center justify-center hover:bg-ink/5 transition-colors cursor-pointer"
+            aria-label="Open search"
+          >
+            <Search className="w-4 h-4" />
+          </button>
+        )}
       </div>
     </nav>
-  );
-}
-
-function KnitHeroGraphic() {
-  const size = 60;
-  const elements = [];
-  for (let i = 0; i < size; i++) {
-    for (let j = 0; j < size; j++) {
-      const x = (i - size/2) * 3.5;
-      const y = (j - size/2) * 3.5;
-      const dist = Math.abs(i - size/2) + Math.abs(j - size/2);
-      if (dist < 28) {
-        const wave = Math.sin(i * 0.15) * Math.cos(j * 0.15) * 4;
-        elements.push(
-          <text key={`${i}-${j}`} x={x + wave} y={y - wave} fontSize="3.5" fontFamily="monospace" fill="currentColor" opacity={0.15 + (28-dist)/35}>
-            {i % 2 === 0 ? 'v' : 'V'}
-          </text>
-        );
-      }
-    }
-  }
-  return (
-    <motion.svg 
-      viewBox="-120 -120 240 240" 
-      className="w-full max-w-2xl text-ink"
-      animate={{ 
-        y: [0, -10, 0],
-        opacity: [0.85, 1, 0.85]
-      }}
-      transition={{ 
-        duration: 8, 
-        repeat: Infinity, 
-        ease: "easeInOut" 
-      }}
-      whileHover={{ 
-        scale: 1.05,
-        rotate: 2,
-        opacity: 1,
-        transition: { duration: 0.5, ease: "easeOut" }
-      }}
-    >
-      <g transform="scale(1.4, 0.8) rotate(45)">
-        {elements}
-      </g>
-    </motion.svg>
   );
 }
 
@@ -184,23 +175,90 @@ function ConsultationModal({ isOpen, onClose }: { isOpen: boolean, onClose: () =
 }
 
 function Hero({ onOpenModal }: { onOpenModal: () => void }) {
+  const ref = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start start", "end start"]
+  });
+  
+  // Smooth out the scroll progress for a more natural feel
+  const smoothProgress = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001
+  });
+
+  // More subtle zoom out, more pronounced parallax
+  const scale = useTransform(smoothProgress, [0, 1], [1.05, 1]);
+  const y = useTransform(smoothProgress, [0, 1], ["0%", "30%"]);
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.15,
+        delayChildren: 0.1,
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } }
+  };
+
   return (
-    <section id="home" className="grid grid-cols-1 lg:grid-cols-2 min-h-[85vh] border-b border-grid">
+    <section ref={ref} id="home" className="grid grid-cols-1 lg:grid-cols-2 min-h-[85vh] border-b border-grid">
       <div className="p-12 lg:p-24 flex flex-col justify-center border-b lg:border-b-0 lg:border-r border-grid">
-        <h1 className="font-serif text-4xl lg:text-5xl xl:text-[3.5rem] leading-[1.05] tracking-tight mb-16 text-ink">
-          Technical Knitwear<br/>Development &<br/>Global Sourcing
-        </h1>
-        <div className="mt-auto">
-          <p className="text-xs max-w-[250px] mb-6 text-ink/80 leading-relaxed">
-            The Time to Act is Now,<br/>Together we can Transform<br/>Your Knit Production
+        <motion.h1 
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          className="font-roboto text-5xl lg:text-6xl xl:text-[4.5rem] leading-[1.02] tracking-tighter mb-12 text-ink font-extrabold uppercase"
+        >
+          <motion.span variants={itemVariants} className="block">Precision Knitwear</motion.span>
+          <motion.span variants={itemVariants} className="block">Development &</motion.span>
+          <motion.span variants={itemVariants} className="block">Global Sourcing</motion.span>
+        </motion.h1>
+        <motion.div 
+          className="mt-auto"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <p className="text-sm max-w-[320px] mb-8 text-ink/80 leading-relaxed">
+            End-to-end manufacturing solutions for modern brands. We transform your concepts into high-quality, scalable knitwear.
           </p>
-          <button onClick={onOpenModal} className="border border-ink px-6 py-2 text-[9px] uppercase tracking-widest hover:bg-ink hover:text-white transition-colors cursor-pointer inline-block">
+          <button onClick={onOpenModal} className="border border-ink px-6 py-3 text-[10px] font-semibold uppercase tracking-widest hover:bg-ink hover:text-white transition-colors cursor-pointer inline-block">
             Get a Free Consultation
           </button>
-        </div>
+        </motion.div>
       </div>
-      <div className="p-12 flex items-center justify-center relative overflow-hidden">
-        <KnitHeroGraphic />
+      <div className="relative overflow-hidden min-h-[400px] lg:min-h-full flex items-center justify-center bg-ink/5">
+        <motion.div style={{ scale, y }} className="absolute inset-0 w-full h-full">
+          <motion.img 
+            src="https://i.imgur.com/h4SaL27.jpeg" 
+            alt="Technical Knitwear Manufacturing" 
+            className="w-full h-full object-cover origin-center"
+            referrerPolicy="no-referrer"
+            initial={{ scale: 1.2, opacity: 0, filter: "blur(10px)" }}
+            animate={{ 
+              scale: [1.2, 1.05, 1.1], 
+              opacity: 1, 
+              filter: "blur(0px)",
+              x: ["0%", "-2%", "1%"],
+              y: ["0%", "1%", "-1%"]
+            }}
+            transition={{ 
+              opacity: { duration: 1.5, ease: "easeOut" },
+              filter: { duration: 1.5, ease: "easeOut" },
+              scale: { duration: 25, repeat: Infinity, repeatType: "reverse", ease: "easeInOut" },
+              x: { duration: 30, repeat: Infinity, repeatType: "reverse", ease: "easeInOut" },
+              y: { duration: 20, repeat: Infinity, repeatType: "reverse", ease: "easeInOut" }
+            }}
+          />
+        </motion.div>
       </div>
     </section>
   );
@@ -209,11 +267,31 @@ function Hero({ onOpenModal }: { onOpenModal: () => void }) {
 function About() {
   return (
     <section id="about" className="grid grid-cols-1 lg:grid-cols-2 border-b border-grid">
-      <div className="bg-[var(--color-bg-sage)] p-12 lg:p-24 relative min-h-[500px] flex items-center justify-center border-b lg:border-b-0 lg:border-r border-grid">
-        <div className="absolute top-8 left-8 bg-ink text-white text-[9px] uppercase tracking-widest px-3 py-1">
+      <div className="bg-[var(--color-bg-sage)] p-12 lg:p-24 relative min-h-[500px] flex items-center justify-center border-b lg:border-b-0 lg:border-r border-grid overflow-hidden">
+        <div className="absolute inset-0 opacity-[0.04] pointer-events-none">
+          <motion.div 
+            className="w-[calc(100%+60px)] h-[calc(100%+60px)] absolute -top-[30px] -left-[30px]"
+            style={{
+              backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 15 L60 15 M15 0 L15 60 M0 45 L60 45 M45 0 L45 60' stroke='%23000000' stroke-width='1' fill='none'/%3E%3C/svg%3E")`,
+              backgroundSize: '60px 60px'
+            }}
+            animate={{
+              x: [0, -60],
+              y: [0, -60]
+            }}
+            transition={{
+              repeat: Infinity,
+              duration: 20,
+              ease: "linear"
+            }}
+          />
+        </div>
+        <div className="absolute top-8 left-8 bg-ink text-white text-[9px] uppercase tracking-widest px-3 py-1 z-10">
           About Us
         </div>
-        <WovenGraphic />
+        <div className="relative z-10">
+          <WovenGraphic />
+        </div>
       </div>
       <div className="bg-[var(--color-bg-sand)] p-12 lg:p-24 flex flex-col justify-center">
         <h2 className="font-serif text-3xl lg:text-4xl leading-tight mb-12 text-ink max-w-md">
@@ -274,11 +352,28 @@ function Services() {
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
         {servicesList.map((s, i) => (
-          <div key={i} className="p-12 border-b border-grid md:border-r md:even:border-r-0 lg:even:border-r lg:[&:nth-child(3n)]:border-r-0 hover:bg-ink/5 transition-colors group flex flex-col min-h-[300px]">
+          <motion.div 
+            key={i} 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.5, delay: (i % 3) * 0.1 }}
+            className={`p-12 border-grid bg-[var(--color-bg-light)] hover:-translate-y-1.5 hover:shadow-xl hover:z-10 transition-all duration-300 relative group flex flex-col min-h-[300px] ${
+              i < servicesList.length - 1 ? 'border-b' : ''
+            } ${
+              i >= servicesList.length - 2 ? 'md:border-b-0' : ''
+            } ${
+              i >= servicesList.length - 3 ? 'lg:border-b-0' : ''
+            } ${
+              i % 2 === 0 ? 'md:border-r' : 'md:border-r-0'
+            } ${
+              (i + 1) % 3 !== 0 ? 'lg:border-r' : 'lg:border-r-0'
+            }`}
+          >
             {s.icon}
             <h3 className="font-serif text-2xl mb-4 pr-4 text-ink">{s.title}</h3>
             <p className="text-[11px] text-ink/70 leading-relaxed mt-auto">{s.desc}</p>
-          </div>
+          </motion.div>
         ))}
       </div>
     </section>
@@ -435,6 +530,45 @@ function Home({ onOpenModal }: { onOpenModal: () => void }) {
   );
 }
 
+function BackToTopButton() {
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const toggleVisibility = () => {
+      if (window.scrollY > 300) {
+        setIsVisible(true);
+      } else {
+        setIsVisible(false);
+      }
+    };
+
+    window.addEventListener('scroll', toggleVisibility);
+    return () => window.removeEventListener('scroll', toggleVisibility);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  };
+
+  return (
+    <motion.button
+      initial={{ opacity: 0, scale: 0.8 }}
+      animate={{ opacity: isVisible ? 1 : 0, scale: isVisible ? 1 : 0.8 }}
+      transition={{ duration: 0.2 }}
+      onClick={scrollToTop}
+      className={`fixed bottom-8 right-8 p-3 bg-ink text-white rounded-full shadow-lg hover:bg-ink/80 transition-colors z-50 ${
+        isVisible ? 'pointer-events-auto' : 'pointer-events-none'
+      }`}
+      aria-label="Back to top"
+    >
+      <ArrowUp size={20} />
+    </motion.button>
+  );
+}
+
 export default function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -449,6 +583,7 @@ export default function App() {
         </Routes>
         <Footer />
         <ConsultationModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+        <BackToTopButton />
       </div>
     </Router>
   );

@@ -1,15 +1,21 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Outfit:wght@300;400;500;600;700&family=Roboto:wght@400;500;700;900&display=swap');
 @import "tailwindcss";
 
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-serif: "Playfair Display", ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-display: "Outfit", system-ui, sans-serif;
+  --font-roboto: "Roboto", system-ui, sans-serif;
   
   --color-bg-light: #fdfdfc;
   --color-bg-sage: #c8d8d4;
   --color-bg-sand: #e6e4dc;
   --color-ink: #1a1a1a;
   --color-line: #dcdcdc;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
