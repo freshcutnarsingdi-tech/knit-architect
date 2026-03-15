@@ -325,16 +325,6 @@ function Footer() {
           </a>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-[11px] text-ink/70">
-          <div>
-            <h4 className="text-[9px] uppercase tracking-widest font-bold mb-2 text-ink">UK Office</h4>
-            <p>1 Hamilton Street<br />Leicester<br />United Kingdom</p>
-          </div>
-          <div>
-            <h4 className="text-[9px] uppercase tracking-widest font-bold mb-2 text-ink">Bangladesh Office</h4>
-            <p>Baluka<br />Mymenshingh<br />Bangladesh</p>
-          </div>
-        </div>
       </div>
       
       <div>
