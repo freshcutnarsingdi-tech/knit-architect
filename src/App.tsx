@@ -9,6 +9,7 @@ import { Layers, Search, Lightbulb, Code, CheckCircle, Globe, Linkedin, ArrowUp 
 import { motion, useScroll, useTransform, useSpring } from 'motion/react';
 import ProgressiveImage from './components/ProgressiveImage';
 import TopProgressBar from './components/TopProgressBar';
+import { Helmet, HelmetProvider } from 'react-helmet-async';
 
 function ScrollToTop() {
   const { pathname, hash } = useLocation();
@@ -532,6 +533,14 @@ function Careers() {
 
   return (
     <div className="flex-grow bg-[var(--color-bg-light)]">
+      <Helmet>
+        <title>Careers | KnitArchitect - Technical Knitwear Specialties</title>
+        <meta name="description" content="Explore career opportunities at KnitArchitect. We are hiring technical knitwear specialists including Stoll and Shima Seiki programmers, garment technologists, and mechanics." />
+        <meta property="og:title" content="Careers | KnitArchitect - Technical Knitwear Specialties" />
+        <meta property="og:description" content="Explore career opportunities at KnitArchitect. We are hiring technical knitwear specialists including Stoll and Shima Seiki programmers, garment technologists, and mechanics." />
+        <meta name="twitter:title" content="Careers | KnitArchitect - Technical Knitwear Specialties" />
+        <meta name="twitter:description" content="Explore career opportunities at KnitArchitect. We are hiring technical knitwear specialists including Stoll and Shima Seiki programmers, garment technologists, and mechanics." />
+      </Helmet>
       <div className="max-w-7xl mx-auto px-12 lg:px-16 py-24">
         <h1 className="text-[40px] md:text-[48px] font-sans font-bold text-[var(--color-charcoal)] mb-8 tracking-tight uppercase leading-tight">Careers</h1>
         <p className="text-[16px] leading-[1.6] text-[var(--color-warm-gray)] max-w-2xl mb-16">
@@ -579,6 +588,14 @@ function Careers() {
 function Home({ onOpenModal }: { onOpenModal: () => void }) {
   return (
     <main className="flex-grow">
+      <Helmet>
+        <title>KnitArchitect | Precision Knitwear Development & Textile Manufacturing</title>
+        <meta name="description" content="Precision Knitwear Development, Global Sourcing, and Textile Manufacturing. End-to-end manufacturing solutions for modern brands. We transform your concepts into high-quality, scalable knitwear and sweaters." />
+        <meta property="og:title" content="KnitArchitect | Precision Knitwear Development & Textile Manufacturing" />
+        <meta property="og:description" content="End-to-end manufacturing solutions for modern brands. We transform your concepts into high-quality, scalable knitwear." />
+        <meta name="twitter:title" content="KnitArchitect | Knitwear Development" />
+        <meta name="twitter:description" content="End-to-end manufacturing solutions for modern brands. We transform your concepts into high-quality, scalable knitwear." />
+      </Helmet>
       <Hero onOpenModal={onOpenModal} />
       <About />
       <Services />
@@ -630,19 +647,21 @@ export default function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
-    <Router>
-      <ScrollToTop />
-      <TopProgressBar />
-      <div className="min-h-screen flex flex-col selection:bg-[var(--color-primary-blue)] selection:text-white bg-[var(--color-bg-light)]">
-        <Navbar />
-        <Routes>
-          <Route path="/" element={<Home onOpenModal={() => setIsModalOpen(true)} />} />
-          <Route path="/careers" element={<Careers />} />
-        </Routes>
-        <Footer />
-        <ConsultationModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
-        <BackToTopButton />
-      </div>
-    </Router>
+    <HelmetProvider>
+      <Router>
+        <ScrollToTop />
+        <TopProgressBar />
+        <div className="min-h-screen flex flex-col selection:bg-[var(--color-primary-blue)] selection:text-white bg-[var(--color-bg-light)]">
+          <Navbar />
+          <Routes>
+            <Route path="/" element={<Home onOpenModal={() => setIsModalOpen(true)} />} />
+            <Route path="/careers" element={<Careers />} />
+          </Routes>
+          <Footer />
+          <ConsultationModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+          <BackToTopButton />
+        </div>
+      </Router>
+    </HelmetProvider>
   );
 }
