@@ -8,6 +8,7 @@ import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react
 import { Layers, Search, Lightbulb, Code, CheckCircle, Globe, Linkedin, ArrowUp } from 'lucide-react';
 import { motion, useScroll, useTransform, useSpring } from 'motion/react';
 import ProgressiveImage from './components/ProgressiveImage';
+import TopProgressBar from './components/TopProgressBar';
 
 function ScrollToTop() {
   const { pathname, hash } = useLocation();
@@ -61,8 +62,8 @@ function Navbar() {
           <ProgressiveImage 
             src="/logo.png" 
             alt="KNITArchitect Logo" 
-            className="h-6 w-auto flex items-center justify-center shrink-0 mr-6"
-            imageClassName="h-6 w-auto object-contain"
+            className="h-6 w-6 flex items-center justify-center shrink-0 mr-6"
+            imageClassName="h-6 w-6 object-contain"
             loading="eager"
             placeholderColor="bg-transparent"
           />
@@ -252,8 +253,8 @@ function Hero({ onOpenModal }: { onOpenModal: () => void }) {
             <ProgressiveImage 
               src="/logo.png" 
               alt="KNITArchitect Logo" 
-              className="h-6 w-auto flex items-center justify-center shrink-0 mr-6"
-              imageClassName="h-6 w-auto object-contain"
+              className="h-6 w-6 flex items-center justify-center shrink-0 mr-6"
+              imageClassName="h-6 w-6 object-contain"
               loading="eager"
               placeholderColor="bg-transparent"
             />
@@ -466,8 +467,8 @@ function Footer() {
           <ProgressiveImage 
             src="/logo.png" 
             alt="KNITArchitect Logo" 
-            className="h-6 w-auto flex items-center justify-center shrink-0 mr-6"
-            imageClassName="h-6 w-auto object-contain"
+            className="h-6 w-6 flex items-center justify-center shrink-0 mr-6"
+            imageClassName="h-6 w-6 object-contain"
             loading="lazy"
             placeholderColor="bg-transparent"
           />
@@ -631,6 +632,7 @@ export default function App() {
   return (
     <Router>
       <ScrollToTop />
+      <TopProgressBar />
       <div className="min-h-screen flex flex-col selection:bg-[var(--color-primary-blue)] selection:text-white bg-[var(--color-bg-light)]">
         <Navbar />
         <Routes>

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 
 // Global cache of successfully loaded image URLs to bypass future transition flashes
@@ -12,6 +12,7 @@ interface ProgressiveImageProps {
   loading?: 'lazy' | 'eager';
   fallbackSrc?: string;
   imageClassName?: string;
+  showSpinner?: boolean;
   // Custom motion/styling adjustments for the loaded image
   customAnimate?: any;
   customInitial?: any;
@@ -22,54 +23,72 @@ export default function ProgressiveImage({
   src,
   alt,
   className = '',
-  placeholderColor = 'bg-neutral-100',
+  placeholderColor = 'bg-transparent',
   loading = 'lazy',
   fallbackSrc,
   imageClassName = '',
+  showSpinner = false,
   customAnimate,
   customInitial,
   customTransition,
 }: ProgressiveImageProps) {
-  // Instantly initialize as loaded if already in our cache or cached by the browser
-  const [isLoaded, setIsLoaded] = useState(() => {
-    if (typeof window !== 'undefined') {
-      if (loadedUrls.has(src)) return true;
-      const img = new Image();
-      img.src = src;
-      if (img.complete) {
-        loadedUrls.add(src);
-        return true;
-      }
-    }
-    return false;
-  });
+  // Check if already cached/loaded to avoid any animation delay or placeholder flash
+  const isInitiallyLoaded = typeof window !== 'undefined' && (loadedUrls.has(src) || (() => {
+    const img = new Image();
+    img.src = src;
+    return img.complete;
+  })());
 
+  const [isLoaded, setIsLoaded] = useState(isInitiallyLoaded);
   const [currentSrc, setCurrentSrc] = useState(src);
   const [hasError, setHasError] = useState(false);
+  const isFirstMount = useRef(true);
 
-  // Sync when src changes
   useEffect(() => {
+    if (isFirstMount.current) {
+      isFirstMount.current = false;
+      if (isInitiallyLoaded) {
+        loadedUrls.add(src);
+        return;
+      }
+    }
+
+    // If source changed
     if (loadedUrls.has(src)) {
       setIsLoaded(true);
       setCurrentSrc(src);
       return;
     }
+
+    const img = new Image();
+    img.src = src;
+    img.referrerPolicy = 'no-referrer';
     
-    if (typeof window !== 'undefined') {
-      const img = new Image();
-      img.src = src;
-      if (img.complete) {
-        loadedUrls.add(src);
-        setIsLoaded(true);
-        setCurrentSrc(src);
-        return;
-      }
+    if (img.complete) {
+      loadedUrls.add(src);
+      setIsLoaded(true);
+      setCurrentSrc(src);
+      return;
     }
 
-    setCurrentSrc(src);
     setIsLoaded(false);
+    setCurrentSrc(src);
     setHasError(false);
-  }, [src]);
+
+    img.onload = () => {
+      loadedUrls.add(src);
+      setIsLoaded(true);
+    };
+
+    img.onerror = () => {
+      if (fallbackSrc && !hasError) {
+        setHasError(true);
+        setCurrentSrc(fallbackSrc);
+      } else {
+        setIsLoaded(true);
+      }
+    };
+  }, [src, fallbackSrc]);
 
   const handleLoad = () => {
     loadedUrls.add(currentSrc);
@@ -81,7 +100,7 @@ export default function ProgressiveImage({
       setHasError(true);
       setCurrentSrc(fallbackSrc);
     } else {
-      setIsLoaded(true); // Stop spinner if both fail
+      setIsLoaded(true);
     }
   };
 
@@ -94,13 +113,15 @@ export default function ProgressiveImage({
             key="placeholder"
             initial={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.3, ease: 'easeInOut' }}
+            transition={{ duration: 0.2, ease: 'easeInOut' }}
             className={`absolute inset-0 w-full h-full ${placeholderColor} flex items-center justify-center z-10`}
           >
             {/* Subtle shimmering overlay */}
             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[var(--color-primary-blue)]/5 to-transparent w-full h-full animate-pulse" />
-            {/* Soft pulse animation */}
-            <div className="w-12 h-12 rounded-full border-2 border-[var(--color-primary-blue)]/20 border-t-[var(--color-primary-blue)] animate-spin opacity-40" />
+            {showSpinner && (
+              /* Small, safe spinner that fits in any container */
+              <div className="w-4 h-4 rounded-full border-2 border-[var(--color-primary-blue)]/20 border-t-[var(--color-primary-blue)] animate-spin opacity-40" />
+            )}
           </motion.div>
         )}
       </AnimatePresence>
@@ -114,10 +135,11 @@ export default function ProgressiveImage({
         referrerPolicy="no-referrer"
         onLoad={handleLoad}
         onError={handleError}
-        initial={isLoaded ? (customAnimate || { opacity: 1, filter: 'blur(0px)' }) : (customInitial || { opacity: 0, filter: 'blur(10px)' })}
-        animate={isLoaded ? (customAnimate || { opacity: 1, filter: 'blur(0px)' }) : (customInitial || { opacity: 0, filter: 'blur(10px)' })}
-        transition={isLoaded ? { duration: 0 } : (customTransition || { duration: 0.4, ease: 'easeOut' })}
+        initial={isInitiallyLoaded ? { opacity: 1, filter: 'blur(0px)' } : (customInitial || { opacity: 0, filter: 'blur(4px)' })}
+        animate={isLoaded ? (customAnimate || { opacity: 1, filter: 'blur(0px)' }) : (customInitial || { opacity: 0, filter: 'blur(4px)' })}
+        transition={isInitiallyLoaded ? { duration: 0 } : (customTransition || { duration: 0.3, ease: 'easeOut' })}
       />
     </div>
   );
 }
+
