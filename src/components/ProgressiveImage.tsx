@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 
+// Global cache of successfully loaded image URLs to bypass future transition flashes
+const loadedUrls = new Set<string>();
+
 interface ProgressiveImageProps {
   src: string;
   alt: string;
@@ -27,18 +30,49 @@ export default function ProgressiveImage({
   customInitial,
   customTransition,
 }: ProgressiveImageProps) {
-  const [isLoaded, setIsLoaded] = useState(false);
+  // Instantly initialize as loaded if already in our cache or cached by the browser
+  const [isLoaded, setIsLoaded] = useState(() => {
+    if (typeof window !== 'undefined') {
+      if (loadedUrls.has(src)) return true;
+      const img = new Image();
+      img.src = src;
+      if (img.complete) {
+        loadedUrls.add(src);
+        return true;
+      }
+    }
+    return false;
+  });
+
   const [currentSrc, setCurrentSrc] = useState(src);
   const [hasError, setHasError] = useState(false);
 
   // Sync when src changes
   useEffect(() => {
+    if (loadedUrls.has(src)) {
+      setIsLoaded(true);
+      setCurrentSrc(src);
+      return;
+    }
+    
+    if (typeof window !== 'undefined') {
+      const img = new Image();
+      img.src = src;
+      if (img.complete) {
+        loadedUrls.add(src);
+        setIsLoaded(true);
+        setCurrentSrc(src);
+        return;
+      }
+    }
+
     setCurrentSrc(src);
     setIsLoaded(false);
     setHasError(false);
   }, [src]);
 
   const handleLoad = () => {
+    loadedUrls.add(currentSrc);
     setIsLoaded(true);
   };
 
@@ -60,7 +94,7 @@ export default function ProgressiveImage({
             key="placeholder"
             initial={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.5, ease: 'easeInOut' }}
+            transition={{ duration: 0.3, ease: 'easeInOut' }}
             className={`absolute inset-0 w-full h-full ${placeholderColor} flex items-center justify-center z-10`}
           >
             {/* Subtle shimmering overlay */}
@@ -80,9 +114,9 @@ export default function ProgressiveImage({
         referrerPolicy="no-referrer"
         onLoad={handleLoad}
         onError={handleError}
-        initial={customInitial || { opacity: 0, filter: 'blur(10px)' }}
+        initial={isLoaded ? (customAnimate || { opacity: 1, filter: 'blur(0px)' }) : (customInitial || { opacity: 0, filter: 'blur(10px)' })}
         animate={isLoaded ? (customAnimate || { opacity: 1, filter: 'blur(0px)' }) : (customInitial || { opacity: 0, filter: 'blur(10px)' })}
-        transition={customTransition || { duration: 0.6, ease: 'easeOut' }}
+        transition={isLoaded ? { duration: 0 } : (customTransition || { duration: 0.4, ease: 'easeOut' })}
       />
     </div>
   );
