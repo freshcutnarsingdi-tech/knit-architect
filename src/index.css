@@ -1,17 +1,18 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Outfit:wght@300;400;500;600;700&family=Roboto:wght@400;500;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
 @import "tailwindcss";
 
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-serif: "Playfair Display", ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
-  --font-display: "Outfit", system-ui, sans-serif;
-  --font-roboto: "Roboto", system-ui, sans-serif;
+  --font-serif: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-roboto: "Inter", ui-sans-serif, system-ui, sans-serif;
   
-  --color-bg-light: #fdfdfc;
-  --color-bg-sage: #c8d8d4;
-  --color-bg-sand: #e6e4dc;
-  --color-ink: #1a1a1a;
-  --color-line: #dcdcdc;
+  --color-primary-blue: #2D6CDF;
+  --color-bg-light: #F9F9F7;
+  --color-charcoal: #1A1A1A;
+  --color-warm-gray: #6B6B6B;
+  --color-ink: #1A1A1A;
+  --color-line: #EBEBE9;
 }
 
 html {
@@ -20,8 +21,11 @@ html {
 
 body {
   background-color: var(--color-bg-light);
-  color: var(--color-ink);
+  color: var(--color-charcoal);
   font-family: var(--font-sans);
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1.6;
 }
 
 .border-grid {

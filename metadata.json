@@ -1,5 +1,6 @@
 {
-  "name": "knitarchitect",
-  "description": "",
-  "requestFramePermissions": []
+  "name": "Knitwear Development",
+  "description": "Technical knitwear product development, material sourcing, and global manufacturing consultation.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }
