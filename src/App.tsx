@@ -61,7 +61,7 @@ function Navbar() {
       <Link to="/#home" className="border-r border-grid flex items-center shrink-0 hover:bg-[var(--color-primary-blue)]/5 transition-all duration-200">
         <div className="py-6 pl-6 flex items-center shrink-0">
           <ProgressiveImage 
-            src="/logo.png" 
+            src="/logo.svg" 
             alt="KNITArchitect Logo" 
             className="h-6 w-6 flex items-center justify-center shrink-0 mr-6"
             imageClassName="h-6 w-6 object-contain"
@@ -252,7 +252,7 @@ function Hero({ onOpenModal }: { onOpenModal: () => void }) {
         >
           <div className="p-6 flex items-center shrink-0">
             <ProgressiveImage 
-              src="/logo.png" 
+              src="/logo.svg" 
               alt="KNITArchitect Logo" 
               className="h-6 w-6 flex items-center justify-center shrink-0 mr-6"
               imageClassName="h-6 w-6 object-contain"
@@ -508,7 +508,7 @@ function Footer() {
       <div className="col-span-1 md:col-span-2">
         <div className="flex items-center mb-6">
           <ProgressiveImage 
-            src="/logo.png" 
+            src="/logo.svg" 
             alt="KNITArchitect Logo" 
             className="h-6 w-6 flex items-center justify-center shrink-0 mr-6"
             imageClassName="h-6 w-6 object-contain"
