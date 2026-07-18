@@ -343,25 +343,49 @@ function About() {
             }}
           />
         </div>
-        <div className="absolute top-8 left-8 border border-grid text-[var(--color-warm-gray)] text-[12px] font-medium uppercase tracking-[0.08em] px-3 py-1.5 z-10 bg-[var(--color-bg-light)]">
+        <motion.div 
+          initial={{ opacity: 0, x: -15 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.6 }}
+          className="absolute top-8 left-8 border border-grid text-[var(--color-warm-gray)] text-[12px] font-medium uppercase tracking-[0.08em] px-3 py-1.5 z-10 bg-[var(--color-bg-light)]"
+        >
           About Us
-        </div>
-        <div className="relative z-10">
+        </motion.div>
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.95, rotate: -3 }}
+          whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="relative z-10"
+        >
           <WovenGraphic />
-        </div>
+        </motion.div>
       </div>
       <div className="bg-[var(--color-bg-light)] p-12 lg:p-24 flex flex-col justify-center">
-        <h2 className="font-sans text-[32px] leading-tight font-bold mb-8 text-[var(--color-charcoal)] max-w-md">
+        <motion.h2 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="font-sans text-[32px] leading-tight font-bold mb-8 text-[var(--color-charcoal)] max-w-md"
+        >
           What does technical knitwear development really mean?
-        </h2>
-        <div className="mt-8 space-y-6">
+        </motion.h2>
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 0.8, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+          className="mt-8 space-y-6"
+        >
           <p className="text-[16px] leading-[1.6] text-[var(--color-charcoal)] font-bold max-w-md">
             Learn about our comprehensive approach to knitwear consulting.
           </p>
           <p className="text-[16px] leading-[1.6] text-[var(--color-warm-gray)] max-w-md">
             Our expertise covers the full development cycle—from concept to production execution. We provide professional knitwear development and innovation services to support brands, buying houses, and manufacturers in achieving efficient, technically optimized, and commercially viable knit products.
           </p>
-        </div>
+        </motion.div>
       </div>
     </section>
   );
@@ -403,10 +427,16 @@ const servicesList = [
 function Services() {
   return (
     <section id="services" className="bg-[var(--color-bg-light)] border-b border-grid">
-      <div className="border-b border-grid px-12 py-6 flex items-center gap-4">
+      <motion.div 
+        initial={{ opacity: 0, x: -20 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        viewport={{ once: true, margin: "-50px" }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+        className="border-b border-grid px-12 py-6 flex items-center gap-4"
+      >
         <div className="w-2 h-2 bg-[var(--color-primary-blue)] rounded-full" />
         <h2 className="text-[12px] font-medium uppercase tracking-[0.08em] text-[var(--color-warm-gray)]">Core Services</h2>
-      </div>
+      </motion.div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
         {servicesList.map((s, i) => (
           <motion.div 
@@ -442,20 +472,32 @@ function CTA({ onOpenModal }: { onOpenModal: () => void }) {
     <section className="bg-[var(--color-charcoal)] text-white p-12 lg:p-24 flex flex-col md:flex-row items-center justify-between relative overflow-hidden">
       <div className="absolute inset-0 opacity-5" style={{ backgroundImage: 'radial-gradient(#ffffff 1px, transparent 1px)', backgroundSize: '10px 10px' }} />
       
-      <div className="relative z-10 max-w-2xl mb-8 md:mb-0">
+      <motion.div 
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-80px" }}
+        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        className="relative z-10 max-w-2xl mb-8 md:mb-0"
+      >
         <h2 className="font-sans text-[32px] font-bold leading-tight mb-4">
           Explore our expertise in Product Development, Sourcing & Technical Consultation.
         </h2>
         <p className="text-[16px] leading-[1.6] text-white/80">
           Let's Develop a Winning Knitwear Strategy Together
         </p>
-      </div>
+      </motion.div>
       
-      <div className="relative z-10 shrink-0">
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.95 }}
+        whileInView={{ opacity: 1, scale: 1 }}
+        viewport={{ once: true, margin: "-80px" }}
+        transition={{ duration: 0.6, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+        className="relative z-10 shrink-0"
+      >
         <button onClick={onOpenModal} className="bg-[var(--color-primary-blue)] hover:bg-[#1E52B7] text-white px-8 py-4 text-[12px] font-medium uppercase tracking-[0.08em] transition-all duration-300 border-none shadow-lg cursor-pointer">
           Book a Consultation
         </button>
-      </div>
+      </motion.div>
     </section>
   );
 }
