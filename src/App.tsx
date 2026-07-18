@@ -627,6 +627,120 @@ function Careers() {
   );
 }
 
+function Partners({ onOpenModal }: { onOpenModal: () => void }) {
+  return (
+    <section id="partners" className="bg-[var(--color-bg-light)] border-b border-grid">
+      <motion.div 
+        initial={{ opacity: 0, x: -20 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        viewport={{ once: true, margin: "-50px" }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+        className="border-b border-grid px-12 py-6 flex items-center gap-4"
+      >
+        <div className="w-2 h-2 bg-[var(--color-primary-blue)] rounded-full" />
+        <h2 className="text-[12px] font-medium uppercase tracking-[0.08em] text-[var(--color-warm-gray)]">Partner with Us & Brand Assets</h2>
+      </motion.div>
+      <div className="grid grid-cols-1 lg:grid-cols-2">
+        <div className="p-12 lg:p-24 flex flex-col justify-center border-b lg:border-b-0 lg:border-r border-grid">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+          >
+            <h3 className="font-sans text-[32px] font-bold text-[var(--color-charcoal)] leading-tight mb-6 uppercase">
+              Co-Developing Knitwear Excellence
+            </h3>
+            <p className="text-[16px] leading-[1.6] text-[var(--color-warm-gray)] mb-8">
+              We collaborate with forward-thinking fashion labels, established sourcing houses, and leading manufacturers worldwide. By integrating our deep technical product engineering with highly organized global sourcing networks, we streamline production cycles and elevate product quality.
+            </p>
+            <p className="text-[16px] leading-[1.6] text-[var(--color-warm-gray)] mb-10">
+              Need authorized marketing files, official brand assets, or looking to deploy our structural engineering solutions in your supply chain? Explore our logo and asset specifications below.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4">
+              <button 
+                onClick={onOpenModal} 
+                className="bg-[var(--color-primary-blue)] hover:bg-[#1E52B7] text-white px-8 py-4 text-[12px] font-medium uppercase tracking-[0.08em] transition-all duration-300 border-none shadow-md cursor-pointer"
+              >
+                Become a Partner
+              </button>
+              <a 
+                href="/logo.png" 
+                download="Knitarchitect-Logo.png"
+                className="border border-grid hover:border-[var(--color-primary-blue)] text-[var(--color-charcoal)] hover:text-[var(--color-primary-blue)] px-8 py-4 text-[12px] font-medium uppercase tracking-[0.08em] transition-all duration-300 flex items-center justify-center bg-white shadow-sm"
+              >
+                Download Official Logo
+              </a>
+            </div>
+          </motion.div>
+        </div>
+
+        <div className="p-12 lg:p-24 flex flex-col justify-center bg-neutral-50/50">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, delay: 0.1 }}
+            className="flex flex-col items-center"
+          >
+            {/* Visual Guide: Clear Space and Minimum Size */}
+            <div className="relative p-12 bg-[#1A1D20] border border-neutral-800 rounded-xl shadow-2xl flex flex-col items-center justify-center w-full max-w-sm overflow-hidden group">
+              {/* Corner clear-space lines showing architectural theme */}
+              <div className="absolute top-4 left-4 text-[9px] font-mono text-neutral-500 uppercase tracking-widest">Clear Space Margin</div>
+              <div className="absolute inset-8 border border-dashed border-neutral-700 pointer-events-none opacity-60 flex items-center justify-center">
+                <span className="absolute bottom-1 right-2 text-[8px] font-mono text-neutral-500">X = LOGO HEIGHT</span>
+              </div>
+              
+              {/* Logo container, explicitly respecting "Minimum size: 200px height for digital use" */}
+              <div className="relative z-10 h-[200px] w-[200px] flex items-center justify-center p-4">
+                <ProgressiveImage 
+                  src="/logo.png" 
+                  alt="KNITArchitect High-Res Logo" 
+                  className="h-full w-full flex items-center justify-center"
+                  imageClassName="h-full w-full object-contain"
+                  loading="lazy"
+                  placeholderColor="bg-transparent"
+                />
+              </div>
+
+              {/* Grid guide markings to look clean and tech-forward */}
+              <div className="absolute left-8 top-1/2 -translate-y-1/2 w-4 h-[1px] bg-neutral-600 opacity-40" />
+              <div className="absolute right-8 top-1/2 -translate-y-1/2 w-4 h-[1px] bg-neutral-600 opacity-40" />
+              <div className="absolute top-8 left-1/2 -translate-x-1/2 w-[1px] h-4 bg-neutral-600 opacity-40" />
+              <div className="absolute bottom-8 left-1/2 -translate-x-1/2 w-[1px] h-4 bg-neutral-600 opacity-40" />
+            </div>
+
+            {/* Logo Specifications */}
+            <div className="w-full max-w-sm mt-8 space-y-4">
+              <h4 className="text-[12px] font-bold uppercase tracking-[0.1em] text-[var(--color-charcoal)] border-b border-grid pb-2">Official Guidelines</h4>
+              
+              <div className="flex items-start gap-3">
+                <div className="w-5 h-5 rounded-full bg-[var(--color-primary-blue)]/10 text-[var(--color-primary-blue)] flex items-center justify-center shrink-0 text-[10px] font-bold mt-0.5">1</div>
+                <div>
+                  <h5 className="text-[13px] font-bold text-[var(--color-charcoal)] uppercase tracking-wide">Minimum Size Requirement</h5>
+                  <p className="text-[13px] text-[var(--color-warm-gray)] leading-relaxed mt-0.5">
+                    Maintain a minimum height of **200px** in all digital applications to keep the cursive brand signature fully readable.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3">
+                <div className="w-5 h-5 rounded-full bg-[var(--color-primary-blue)]/10 text-[var(--color-primary-blue)] flex items-center justify-center shrink-0 text-[10px] font-bold mt-0.5">2</div>
+                <div>
+                  <h5 className="text-[13px] font-bold text-[var(--color-charcoal)] uppercase tracking-wide">Clear Space Protection</h5>
+                  <p className="text-[13px] text-[var(--color-warm-gray)] leading-relaxed mt-0.5">
+                    Surround the emblem with a protective margin equal to the height of the circular logo mark on all sides. No text or overlapping imagery should cross this boundary.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function Home({ onOpenModal }: { onOpenModal: () => void }) {
   return (
     <main className="flex-grow">
@@ -641,6 +755,7 @@ function Home({ onOpenModal }: { onOpenModal: () => void }) {
       <Hero onOpenModal={onOpenModal} />
       <About />
       <Services />
+      <Partners onOpenModal={onOpenModal} />
       <CTA onOpenModal={onOpenModal} />
     </main>
   );
